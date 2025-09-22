@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Texas: The Age of Exploration Simulation</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,300;0,400;0,700;1,300&display=swap');
+        body {
+            font-family: 'Merriweather', serif;
+            background-color: #f7f2e8;
+            color: #3b2c21;
+        }
+        .container {
+            max-width: 800px;
+            margin: 2rem auto;
+            background-color: #fff;
+            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+            border-radius: 12px;
+            padding: 2rem;
+        }
+        .btn-choice {
+            background-color: #5d4037;
+            color: #fff;
+            border-radius: 8px;
+            padding: 1rem 1.5rem;
+            transition: transform 0.2s ease;
+        }
+        .btn-choice:hover {
+            transform: translateY(-2px);
+            background-color: #4e352f;
+        }
+        .text-brown {
+            color: #3b2c21;
+        }
+    </style>
+</head>
+<body class="p-4 flex items-center justify-center min-h-screen">
+
+    <div id="game-container" class="container">
+        <div class="flex justify-between items-center mb-6 border-b-2 border-brown pb-4">
+            <h1 class="text-4xl font-bold text-brown">Texas: The Age of Exploration</h1>
+            <div class="bg-gray-200 text-brown px-4 py-2 rounded-full font-bold">
+                Score: <span id="score">500</span>
+            </div>
+        </div>
+
+        <div id="game-content" class="min-h-[300px] flex flex-col justify-center">
+            <!-- Game content will be dynamically injected here -->
+        </div>
+
+    </div>
+
+    <script>
+        // Global state variables
+        let score = 500;
+        let currentPage = 'intro';
+
+        // Get DOM elements
+        const scoreEl = document.getElementById('score');
+        const gameContentEl = document.getElementById('game-content');
+
+        // Function to update the score and display it
+        function updateScore(points) {
+            score += points;
+            scoreEl.textContent = score;
+        }
+
+        // Function to render the current page/scene
+        function renderPage() {
+            gameContentEl.innerHTML = '';
+            let content = '';
+
+            switch (currentPage) {
+                case 'intro':
+                    content = `
+                        <h2 class="text-2xl font-bold mb-4">The Promise of Gold</h2>
+                        <p class="mb-6">You are a young Spanish explorer in the year 1540. Rumors of the Seven Cities of Cíbola, a fabled land of unimaginable wealth, have reached your ears. Driven by a desire for glory and riches, you have been selected to join a large expedition led by Francisco Vásquez de Coronado. Your mission is to find the cities and claim their riches for the Spanish Crown.</p>
+                        <p class="mb-8">Your journey begins now.</p>
+                        <button onclick="changePage('scene1')" class="btn-choice w-full">Begin Your Expedition</button>
+                    `;
+                    break;
+                case 'scene1':
+                    content = `
+                        <h2 class="text-2xl font-bold mb-4">Scene 1: The Harsh Landscape</h2>
+                        <p class="mb-6">Your expedition has crossed into the land we now know as the Texas Panhandle. The landscape is vast and unforgiving, filled with canyons, plains, and a relentless sun. You and your men are running low on fresh water and food.</p>
+                        <p class="mb-8">What do you do?</p>
+                        <div class="flex flex-col space-y-4">
+                            <button onclick="updateScore(50); changePage('scene2_a')" class="btn-choice">A: Send out a small scout party to find a nearby river or stream.</button>
+                            <button onclick="updateScore(-50); changePage('scene2_b')" class="btn-choice">B: Press on, believing you will find a settlement or water source soon.</button>
+                            <button onclick="updateScore(25); changePage('scene2_a')" class="btn-choice">C: Ask for help from local indigenous people you encounter.</button>
+                        </div>
+                    `;
+                    break;
+                case 'scene2_a':
+                    content = `
+                        <h2 class="text-2xl font-bold mb-4">Scene 2: A Caddo Village</h2>
+                        <p class="mb-6">Your scouts, or you, have encountered a small Caddo village near a river. The Caddo people are known for their farming and trade. They are wary but willing to trade with your group, offering food and water in exchange for European goods.</p>
+                        <p class="mb-8">How do you interact with the village?</p>
+                        <div class="flex flex-col space-y-4">
+                            <button onclick="updateScore(75); changePage('scene3_a')" class="btn-choice">A: Offer them metal tools and beads in exchange for a generous amount of food and water.</button>
+                            <button onclick="updateScore(-75); changePage('scene3_b')" class="btn-choice">B: Use force to take what you need, believing your mission for the Crown justifies it.</button>
+                            <button onclick="updateScore(50); changePage('scene3_a')" class="btn-choice">C: Attempt to make a peaceful trade, but only for a small amount of supplies, to avoid wasting your own goods.</button>
+                        </div>
+                    `;
+                    break;
+                case 'scene2_b':
+                    content = `
+                        <h2 class="text-2xl font-bold mb-4">Scene 2: On the Edge of Disaster</h2>
+                        <p class="mb-6">You decided to push forward, ignoring the warning signs. Your men are now severely dehydrated and many of your horses are collapsing from exhaustion. You have made a critical error in judgment.</p>
+                        <p class="mb-8">Your journey ends here. The expedition is a failure.</p>
+                        <button onclick="updateScore(-200); changePage('outcome')" class="btn-choice w-full">See Your Fate</button>
+                    `;
+                    break;
+                case 'scene3_a':
+                    content = `
+                        <h2 class="text-2xl font-bold mb-4">Scene 3: The Search for Gold</h2>
+                        <p class="mb-6">With your supplies replenished, you continue your journey. You finally reach what you believe is one of the Seven Cities of Cíbola—but it is not made of gold. It is a simple Pueblo village. Your men are enraged at the deception.</p>
+                        <p class="mb-8">You now face a difficult choice. Do you punish the villagers for leading you astray, or do you seek a new path?</p>
+                        <div class="flex flex-col space-y-4">
+                            <button onclick="updateScore(-100); changePage('outcome')" class="btn-choice">A: Attack the village to punish them and take any resources they have.</button>
+                            <button onclick="updateScore(100); changePage('outcome')" class="btn-choice">B: Listen to their warnings about a harsh winter and offer to establish a peaceful trading relationship.</button>
+                            <button onclick="updateScore(50); changePage('outcome')" class="btn-choice">C: Continue onward, despite your dwindling resources, in search of the real golden cities.</button>
+                        </div>
+                    `;
+                    break;
+                case 'scene3_b':
+                    content = `
+                        <h2 class="text-2xl font-bold mb-4">Scene 3: A Brutal Mistake</h2>
+                        <p class="mb-6">Your decision to take supplies by force from the Caddo village has led to a violent conflict. You managed to take the supplies, but at a heavy cost. Several of your men were killed, and the Caddo people will now be hostile to any future Spanish expeditions in the region.</p>
+                        <p class="mb-8">Your journey ends here. You have gained supplies, but lost the trust of the local inhabitants. This action has a lasting negative impact on future Spanish exploration.</p>
+                        <button onclick="updateScore(-200); changePage('outcome')" class="btn-choice w-full">See Your Fate</button>
+                    `;
+                    break;
+                case 'outcome':
+                    let finalOutcome = '';
+                    if (score >= 700) {
+                        finalOutcome = `<h3 class="text-3xl font-bold text-green-700 mb-4">The Successful Explorer</h3><p>You made wise and cautious decisions, prioritizing diplomacy and survival over greed. While you did not find the mythical cities of gold, you returned to New Spain with valuable maps and knowledge about the land, its resources, and its peoples. Your reports will be crucial for future Spanish colonization efforts in Texas.</p>`;
+                    } else if (score >= 400) {
+                        finalOutcome = `<h3 class="text-3xl font-bold text-yellow-600 mb-4">The Survivor</h3><p>Your journey was filled with challenges, and while you made some mistakes, you ultimately survived. You returned with limited findings, but your experience will serve as a valuable cautionary tale for future expeditions. You are a survivor, but your reputation as an explorer is tarnished.</p>`;
+                    } else {
+                        finalOutcome = `<h3 class="text-3xl font-bold text-red-600 mb-4">The Failure</h3><p>Your reckless decisions and stubborn pursuit of mythical gold led to the failure of your expedition. You and your men either perished in the harsh landscape or returned to New Spain with nothing to show for your efforts, having lost the respect of your peers. Your name is a footnote in a long line of failed explorers.</p>`;
+                    }
+                    content = `
+                        <h2 class="text-2xl font-bold mb-4">Final Outcome</h2>
+                        ${finalOutcome}
+                        <div class="mt-8 border-t-2 border-brown pt-4">
+                            <h3 class="text-xl font-bold mb-2">Historical Context and Reflection</h3>
+                            <ul class="list-disc list-inside space-y-2">
+                                <li>Many Spanish explorers, like Coronado, were initially driven by the myth of gold, but ultimately, they laid the groundwork for Spanish claims and colonization of Texas.</li>
+                                <li>The interactions between explorers and Native American tribes were complex, ranging from peaceful trade to violent conflict, with lasting impacts on the indigenous people.</li>
+                                <li>How might your final outcome have changed if you had been a Native American leader during this period?</li>
+                            </ul>
+                        </div>
+                        <button onclick="restartGame()" class="btn-choice mt-8 w-full">Play Again</button>
+                    `;
+                    break;
+                case 'loyalist':
+                    content = `
+                        <h2 class="text-2xl font-bold mb-4">Final Outcome</h2>
+                        <h3 class="text-3xl font-bold text-red-600 mb-4">The Loyalist</h3>
+                        <p class="mb-6">You chose to distance yourself from the Sons of Liberty's radical actions. You are seen as a Loyalist by your community, and you may find it difficult to remain in Boston as tensions rise.</p>
+                        <p class="mb-8">Your final score is <span class="font-bold text-lg">${score}</span>. Your journey ends here.</p>
+                        <button onclick="restartGame()" class="btn-choice w-full">Play Again</button>
+                    `;
+                    break;
+                case 'arrested':
+                    content = `
+                        <h2 class="text-2xl font-bold mb-4">Final Outcome</h2>
+                        <h3 class="text-3xl font-bold text-red-600 mb-4">The Arrested</h3>
+                        <p class="mb-6">Your reckless choice led to your arrest by the British. You are a martyr for the cause, but you will spend the next several years in a British prison.</p>
+                        <p class="mb-8">Your final score is <span class="font-bold text-lg">${score}</span>. Your journey ends here.</p>
+                        <button onclick="restartGame()" class="btn-choice w-full">Play Again</button>
+                    `;
+                    break;
+            }
+            gameContentEl.innerHTML = content;
+        }
+
+        // Function to change the current page
+        function changePage(page) {
+            currentPage = page;
+            renderPage();
+        }
+
+        // Function to restart the game
+        function restartGame() {
+            score = 500;
+            scoreEl.textContent = score;
+            changePage('intro');
+        }
+
+        // Start the game on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            renderPage();
+        });
+    </script>
+</body>
+</html>
